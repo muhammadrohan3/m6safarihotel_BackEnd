@@ -1,0 +1,22 @@
+[
+    {
+      "roomNumber": "21B",
+      "roomType": "Executive",
+      "roomPrice": 1234,
+      "roomName": "Nissar Suite"
+    },
+    {
+      "roomNumber": "10A",
+      "roomType": "Deluxe",
+      "roomPrice": 900,
+      "roomName": "Garden View"
+    },
+    {
+      "roomNumber": "5C",
+      "roomType": "Standard",
+      "roomPrice": 600,
+      "roomName": "Cozy Corner"
+    }
+   
+  ]
+  
