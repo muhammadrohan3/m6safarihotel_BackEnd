@@ -56,5 +56,27 @@ export const userController = {
         } catch (error) {
             return res.status(500).send({ msg: error.message })
         }
+    } , 
+    deleteUser : async (req, res) => {
+        try {
+            const user = await userModel.deleteOne({_id : req.params.id})
+            return res.status(200).send({msg : "User Deleted"})
+        } catch (error) {
+            return res.status(500).send({ msg: error.message })
+        }
+    }, 
+    updateUser : async (req, res) => {
+        try {
+            console.log(req.body)
+            let {email , fullName , role} = req.body
+            let obj = {email , fullName , role}
+            if(req.body.password){
+                obj.password = hashPassword(req.body.password)
+            }
+            const user = await userModel.updateOne({_id : req.params.id} , {...obj})
+            return res.status(200).send({msg : "User Updated"})
+        } catch (error) {
+            return res.status(500).send({ msg: error.message })
+        }
     }
 }

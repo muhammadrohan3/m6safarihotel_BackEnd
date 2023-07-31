@@ -70,6 +70,75 @@ export const salesController = {
         } catch (error) {
             return res.status(500).send({ msg: error.message })
         }
+    }, 
+    deleteFood : async (req, res) => {
+        try {
+            const food = await foodModel.deleteOne({_id : req.params.id})
+            res.status(200).send({msg : "Food Deleted"})
+        } catch (error) {
+            return res.status(500).send({ msg: error.message })
+        }
+    },
+    deleteDrink : async (req, res) => {
+        try {
+            const drink = await drinksModel.deleteOne({_id : req.params.id})
+            res.status(200).send({msg : "Drink Deleted"})
+        } catch (error) {
+            return res.status(500).send({ msg: error.message })
+        }
+    },
+    updateFood : async (req, res) => {
+        try {
+            const food = await foodModel.updateOne({_id : req.params.id} , req.body)
+            res.status(200).send({msg : "Food Updated"})
+        } catch (error) {
+            return res.status(500).send({ msg: error.message })
+        }
+    },
+    updateDrink : async (req, res) => {
+        try {
+            const drink = await drinksModel.updateOne({_id : req.params.id} , req.body)
+            res.status(200).send({msg : "Drink Updated"})
+        } catch (error) {
+            return res.status(500).send({ msg: error.message })
+        }
+    },
+    deleteFoodSales : async (req, res) => {
+        try {
+            const foodSales = await foodSalesModel.deleteOne({_id : req.params.id})
+            res.status(200).send({msg : "Food Sales Deleted"})
+        } catch (error) {
+            return res.status(500).send({ msg: error.message })
+        }
+    },
+    updateFoodSales : async (req, res) => {
+        try {
+            const foodSales = await foodSalesModel.updateOne({_id : req.params.id} , req.body)
+            res.status(200).send({msg : "Food Sales Updated"})
+        } catch (error) {
+            return res.status(500).send({ msg: error.message })
+        }
+    },
+    updateDrinkSales : async (req, res) => {
+        try {
+            const drinkSale = await drinkSalesModel.findOne({_id : req.params.id})
+            await drinksModel.updateOne({_id : drinkSale.drinkItem} , {$inc : {stock : drinkSale.quantity}})
+            await drinksModel.updateOne({_id : req.body.drinkItem} , {$inc : {stock : -req.body.quantity}})
+            const drinkSales = await drinkSalesModel.updateOne({_id : req.params.id} , req.body)
+            res.status(200).send({msg : "Drink Sales Updated"})
+        } catch (error) {
+            return res.status(500).send({ msg: error.message })
+        }
+    },
+    deleteDrinkSales : async (req, res) => {
+        try {
+            const drinkSale = await drinkSalesModel.findOne({_id : req.params.id})
+            await drinksModel.updateOne({_id : drinkSale.drinkItem} , {$inc : {stock : drinkSale.quantity}})
+            const drinkSales = await drinkSalesModel.deleteOne({_id : req.params.id})
+            res.status(200).send({msg : "Drink Sales Deleted"})
+        } catch (error) {
+            return res.status(500).send({ msg: error.message })
+        }
     }
 
 }

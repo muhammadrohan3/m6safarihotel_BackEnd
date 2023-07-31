@@ -4,4 +4,6 @@ const router = express.Router()
 
 router.post('/create' , expenseController.addExpenses)
 router.get('/getexpenses' , expenseController.getExpenses)
+router.delete('/deleteexpense/:id' , expenseController.deleteExpense)
+router.put('/updateexpense/:id' , expenseController.updateExpense)
 export default router

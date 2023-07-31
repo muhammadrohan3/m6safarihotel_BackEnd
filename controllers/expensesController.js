@@ -21,6 +21,22 @@ export const expenseController = {
         } catch (error) {
             return res.status(500).send({ msg: error.message })
         }
+    },
+    deleteExpense : async (req, res) => {
+        try {
+            const expense = await expenseModel.deleteOne({_id : req.params.id})
+            res.status(200).send({msg : "Expense Deleted"})
+        } catch (error) {
+            return res.status(500).send({ msg: error.message })
+        }
+    },
+    updateExpense : async (req, res) => {
+        try {
+            const expense = await expenseModel.updateOne({_id : req.params.id} , {...req.body})
+            res.status(200).send({msg : "Expense Updated"})
+        } catch (error) {
+            return res.status(500).send({ msg: error.message })
+        }
     }
 }
 

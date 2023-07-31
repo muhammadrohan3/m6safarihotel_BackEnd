@@ -11,5 +11,13 @@ router.post('/addDrink' , salesController.addDrinks)
 router.get('/getDrinks' , salesController.getDrinks)
 router.post('/addFood' , salesController.addFood)
 router.get('/getFood' , salesController.getFood)
+router.delete('/deleteFood/:id' , salesController.deleteFood)
+router.delete('/deleteDrink/:id' , salesController.deleteDrink)
+router.put('/updateFood/:id' , salesController.updateFood)
+router.put('/updateDrink/:id' , salesController.updateDrink)
+router.put('/updateFoodSales/:id' , salesController.updateFoodSales)
+router.delete('/deleteFoodSales/:id' , salesController.deleteFoodSales)
+router.delete('/deleteDrinkSales/:id' , salesController.deleteDrinkSales)
+router.put('/updateDrinkSales/:id' , salesController.updateDrinkSales)
 
 export default router
