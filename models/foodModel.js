@@ -12,6 +12,10 @@ const foodSchema = new mongoose.Schema({
     addedBy : {
         type : mongoose.Schema.Types.ObjectId ,
         ref : 'User'
+    },
+    status : {
+        type : Boolean, 
+        default : true
     }
 }, {timestamps : true})
 

@@ -14,14 +14,14 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-const dbConnection = ()=>{
+const dbConnection = async ()=>{
     try {
-        mongoose.connect(process.env.MONGODB_URI , {
+        await mongoose.connect(process.env.MONGODB_URI , {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         }) 
     } catch (error) {
-        console.log(error)
+        dbConnection()
     }
 
 }

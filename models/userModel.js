@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
         type : String,
         enum : ['Super Admin' , 'Admin' , 'User'],
         default : 'User'
+    },
+    status : {
+        type : Boolean, 
+        default : true
     }
 } , {timestamps : true})
 

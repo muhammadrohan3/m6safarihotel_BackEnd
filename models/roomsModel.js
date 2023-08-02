@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const roomSchema = mongoose.Schema({
     roomNumber : {
-        type : String ,
+        type : Number ,
         unique : true ,
         required : true
     } ,
@@ -17,6 +17,14 @@ const roomSchema = mongoose.Schema({
     roomName : {
         type : String ,
         required : true
+    },
+    roomFloor : {
+        type : String ,
+        required : true
+    },
+    status : {
+        type : Boolean, 
+        default : true
     }
 } , {
     timestamps : true

@@ -3,11 +3,8 @@ import expenseModel from '../models/expenseModel.js'
 export const expenseController = {
     addExpenses: async (req, res) => {
         try {
-            
             const date = new Date(req.body.date)
-            console.log(date)
             const formattedDate = date.toLocaleDateString()
-            console.log(formattedDate)
             const expense = await expenseModel.create({ ...req.body, date: formattedDate })
             res.status(200).send({ msg: "Expense Added" })
         } catch (error) {

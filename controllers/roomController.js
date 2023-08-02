@@ -1,12 +1,13 @@
 import roomsModel from "../models/roomsModel.js";
 import roomBookingModel from "../models/roomBookingModel.js";
-import moment from 'moment'
 
 
 export const roomController = {
     addRoom : async (req, res) => {
         try {
-            const room = await roomsModel.create(req.body)
+            const rooms =  await roomsModel.findOne().sort({createdAt : -1}).exec()
+
+            const room = await roomsModel.create({...req.body , roomNumber : rooms ? rooms.roomNumber + 1 : 1})
             res.status(200).send({msg : "Room Added"})
         } catch (error) {
             return res.status(500).send({ msg: error.message })
@@ -14,7 +15,7 @@ export const roomController = {
     },
     getRooms : async (req, res) => {
         try {
-            const rooms = await roomsModel.find({})
+            const rooms = await roomsModel.find({status : true})
             res.status(200).send({msg : "Rooms Found" , rooms})
         } catch (error) {
             return res.status(500).send({ msg: error.message })
@@ -22,7 +23,11 @@ export const roomController = {
     }, 
     addRoomBooking : async (req, res) => {
         try {
-             const roomBooking = await roomBookingModel.create(req.body)
+          console.log(req.body)
+          console.log(req.files)
+          let obj = {...req.body , customerId : req.files.customerId[0].filename}
+          console.log(obj)
+             const roomBooking = await roomBookingModel.create(obj)
              return res.status(200).send({msg : "Room Booked"})
         } catch (error) {
             return res.status(500).send({ msg: error.message })
@@ -63,7 +68,24 @@ export const roomController = {
         } catch (error) {
           return res.status(500).send({ msg: error.message });
         }
+    },
+    updateRoom : async (req, res) =>{
+        try {
+          console.log(req.params.id)
+          const room = await roomsModel.updateOne({_id : req.params.id} , {...req.body})
+          res.status(200).send("Room Updated successfully")
+        } catch (error) {
+          return res.status(500).send({msg : error.message})
+        }
+    },
+    deleteRoom : async (req, res)=>{
+      try {
+        const room = await roomsModel.updateOne({_id : req.params.id} , {status : false})
+        res.status(200).send("Room deleted success fully")
+      } catch (error) {
+        return res.status(500).send({msg : error.message})
       }
+    }
       
 }
 //code to make filters

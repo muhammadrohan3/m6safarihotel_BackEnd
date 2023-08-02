@@ -64,11 +64,8 @@ function getWeeksRangeOfMonth(year, month) {
     return weeksRange;
 }
 const weeklyReport = async (startDate, endDate) => {
-    console.log(startDate, endDate)
     const food = await foodSales.find({ createdAt: { $gte: startDate.setHours(0, 0, 0, 0), $lt: endDate.setHours(23, 59, 59, 999) } }).populate('foodItem')
-    console.log(food)
     const foodTest = await foodSales.find({ createdAt: { $gte: '2023-07-01T00:00:00.000Z', $lt: '2023-07-07T23:59:59.000Z' } })
-    console.log(foodTest)
     const drinks = await drinkSalesModel.find({ createdAt: { $gte: startDate.setHours(0, 0, 0, 0), $lt: endDate.setHours(23, 59, 59, 999) } }).populate('drinkItem')
     const rooms = await roomBookingModel.find({ createdAt: { $gte: startDate.setHours(0, 0, 0, 0), $lt: endDate.setHours(23, 59, 59, 999) } }).populate('room')
     let total = {
@@ -76,7 +73,6 @@ const weeklyReport = async (startDate, endDate) => {
         drinksTotal: 0,
         roomsTotal: 0,
     }
-    
     food.forEach(item => {
         if (item?.total) {
             total.foodTotal += item?.total
@@ -89,21 +85,20 @@ const weeklyReport = async (startDate, endDate) => {
     rooms.forEach(item => {
         total.roomsTotal += item.total
     })
-
-
     return total
 }
-
 export const reportController = {
     getDailyReport: async (req, res) => {
         const date = new Date()
         const food = await foodSales.find({ createdAt: { $gte: date.setHours(0, 0, 0, 0), $lt: date.setHours(23, 59, 59, 999) } }).populate('foodItem')
         const drinks = await drinkSalesModel.find({ createdAt: { $gte: date.setHours(0, 0, 0, 0), $lt: date.setHours(23, 59, 59, 999) } }).populate('drinkItem')
         const rooms = await roomBookingModel.find({ createdAt: { $gte: date.setHours(0, 0, 0, 0), $lt: date.setHours(23, 59, 59, 999) } }).populate('room')
+        const expenses = await expenseModel.find({ createdAt: { $gte: date.setHours(0, 0, 0, 0), $lt: date.setHours(23, 59, 59, 999) } })
         let total = {
             foodTotal: 0,
             drinksTotal: 0,
             roomsTotal: 0,
+            expenseTotal: 0
         }
         food.forEach(item => {
             total.foodTotal += item.total
@@ -114,25 +109,27 @@ export const reportController = {
         rooms.forEach(item => {
             total.roomsTotal += item.total
         })
-
+        expenses.forEach(item => {
+            total.expenseTotal += item.amount
+        })
         res.status(200).send({ msg: "Daily Report Found", total })
     },
     getWeeklyReport: async (req, res) => {
         const { startDate, endDate } = getWeekStartAndEndDates();
-        const food = await foodSales.find({ createdAt: { $gte: startDate.setHours(0, 0, 0, 0), $lt: endDate.setHours(23, 59, 59, 999) } }).populate('foodItem')
-        const drinks = await drinkSalesModel.find({ createdAt: { $gte: startDate.setHours(0, 0, 0, 0), $lt: endDate.setHours(23, 59, 59, 999) } }).populate('drinkItem')
-        const rooms = await roomBookingModel.find({ createdAt: { $gte: startDate.setHours(0, 0, 0, 0), $lt: endDate.setHours(23, 59, 59, 999) } }).populate('room')
+        const food = await foodSales.find({ createdAt: { $gte: startDate.setHours(0, 0, 0, 0), $lt: endDate.setHours(23, 59, 59, 999) } })
+        const drinks = await drinkSalesModel.find({ createdAt: { $gte: startDate.setHours(0, 0, 0, 0), $lt: endDate.setHours(23, 59, 59, 999) } })
+        const rooms = await roomBookingModel.find({ createdAt: { $gte: startDate.setHours(0, 0, 0, 0), $lt: endDate.setHours(23, 59, 59, 999) } })
+        const expenses = await expenseModel.find({ createdAt: { $gte: startDate.setHours(0, 0, 0, 0), $lt: endDate.setHours(23, 59, 59, 999) } })
         let total = {
             foodTotal: 0,
             drinksTotal: 0,
             roomsTotal: 0,
+            expenseTotal: 0
         }
-        console.log(food)
         food.forEach(item => {
             if (item?.total) {
                 total.foodTotal += item?.total
             }
-
         })
         drinks.forEach(item => {
             total.drinksTotal += item.total
@@ -140,9 +137,10 @@ export const reportController = {
         rooms.forEach(item => {
             total.roomsTotal += item.total
         })
-
+        expenses.forEach(item => {
+            total.expenseTotal += item.amount
+        })
         res.status(200).send({ msg: "Weekly Report Found", total })
-
     },
     getMonthlyReport: async (req, res) => {
         const date = new Date()
@@ -170,25 +168,19 @@ export const reportController = {
         expense.forEach(item => {
             total.expenseTotal += item.amount
         })
-
         res.status(200).send({ msg: "Monthly Report Found", total })
     },
     getMonthlyDetailedReport: async (req, res) => {
         const date = new Date();
         const total = [];
         const weekRange = getWeeksRangeOfMonth(date.getFullYear(), date.getMonth());
-
         async function fetchWeeklyData() {
             for (const week of weekRange) {
-                console.log(week);
                 const weekly = await weeklyReport(week.start, week.end);
-                console.log(weekly);
                 total.push(weekly);
             }
-
             res.status(200).send({ msg: "Monthly Detailed Report Found", total });
         }
-
         fetchWeeklyData();
 
     }

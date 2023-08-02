@@ -8,4 +8,5 @@ router.get('/getweeklyreport' , reportController.getWeeklyReport)
 router.get('/getmonthlyreport' , reportController.getMonthlyReport)
 router.get('/getmonthlydetailedreport' , reportController.getMonthlyDetailedReport)
 
+
 export default router
