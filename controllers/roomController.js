@@ -59,7 +59,7 @@ export const roomController = {
           let rooms = [];
           if (ids.length > 0) {
             console.log('here');
-            rooms = await roomsModel.find({ _id: { $nin: ids } });
+            rooms = await roomsModel.find({ _id: { $nin: ids }  , status : true});
           } else {
             rooms = await roomsModel.find();
           }

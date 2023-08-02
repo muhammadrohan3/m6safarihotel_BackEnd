@@ -13,7 +13,7 @@ cors({ origin: true, credentials: true })
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
+app.use(express.static('public'))
 const dbConnection = async ()=>{
     try {
         await mongoose.connect(process.env.MONGODB_URI , {
@@ -33,7 +33,9 @@ app.use('/api/expenses' , expenseRouter)
 app.use('/api/sales' , salesRouter)
 app.use('/api/rooms' , roomsRouter)
 app.use('/api/reports' , reportRouter)
-
+app.get("/", (req, res) => {
+    res.send("Hello to Hotel Management API")
+})
 
   
   
