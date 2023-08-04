@@ -65,7 +65,6 @@ function getWeeksRangeOfMonth(year, month) {
 }
 const weeklyReport = async (startDate, endDate) => {
     const food = await foodSales.find({ createdAt: { $gte: startDate.setHours(0, 0, 0, 0), $lt: endDate.setHours(23, 59, 59, 999) } }).populate('foodItem')
-    const foodTest = await foodSales.find({ createdAt: { $gte: '2023-07-01T00:00:00.000Z', $lt: '2023-07-07T23:59:59.000Z' } })
     const drinks = await drinkSalesModel.find({ createdAt: { $gte: startDate.setHours(0, 0, 0, 0), $lt: endDate.setHours(23, 59, 59, 999) } }).populate('drinkItem')
     const rooms = await roomBookingModel.find({ createdAt: { $gte: startDate.setHours(0, 0, 0, 0), $lt: endDate.setHours(23, 59, 59, 999) } }).populate('room')
     let total = {

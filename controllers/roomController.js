@@ -15,7 +15,7 @@ export const roomController = {
     },
     getRooms : async (req, res) => {
         try {
-            const rooms = await roomsModel.find({status : true})
+            const rooms = await roomsModel.find({status : true}).sort({ createdAt: -1 })
             res.status(200).send({msg : "Rooms Found" , rooms})
         } catch (error) {
             return res.status(500).send({ msg: error.message })
@@ -35,7 +35,7 @@ export const roomController = {
     }, 
     getRoomBookings : async (req, res) => {
         try {
-            const bookings = await roomBookingModel.find({}).populate('room')
+            const bookings = await roomBookingModel.find({}).populate('room').sort({ createdAt: -1 })
             return res.status(200).send({msg : "Room Bookings Found" , bookings})
         } catch (error) {
             return res.status(500).send({ msg: error.message })

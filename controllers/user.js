@@ -23,7 +23,7 @@ export const userController = {
     } , 
     getusers : async  (req, res) => {
         try {
-            const users = await userModel.find({})
+            const users = await userModel.find({}).sort({ createdAt: -1 })
             res.send(users)
         }
         catch (error) {

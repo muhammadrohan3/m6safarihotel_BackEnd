@@ -13,7 +13,7 @@ export const expenseController = {
     },
     getExpenses: async (req, res) => {
         try {
-            const expenses = await expenseModel.find({}).populate('addedBy')
+            const expenses = await expenseModel.find({}).populate('addedBy').sort({ createdAt: -1 })
             res.status(200).send({ msg: "Expenses Found", expenses })
         } catch (error) {
             return res.status(500).send({ msg: error.message })
