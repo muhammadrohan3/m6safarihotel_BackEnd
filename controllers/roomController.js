@@ -24,8 +24,8 @@ export const roomController = {
     addRoomBooking : async (req, res) => {
         try {
           console.log(req.body)
-          console.log(req.files)
-          let obj = {...req.body , customerId : req.files.customerId[0].filename}
+          
+          let obj = {...req.body}
           console.log(obj)
              const roomBooking = await roomBookingModel.create(obj)
              return res.status(200).send({msg : "Room Booked"})
@@ -44,11 +44,15 @@ export const roomController = {
     getAvailableRooms :  async (req, res) => {
         try {
           const { checkIn, checkOut } = req.body;
+          console.log(req.query)
+
           const startDate = new Date(checkIn);
           const endDate = new Date(checkOut);
-      
-          const availableRooms = await roomBookingModel.find();
-          const ids = [];
+          let availableRooms
+          if(req.query.notinclude !== 'undefined'){
+            console.log("here in the condition")
+            availableRooms = await roomBookingModel.find({ _id  : { $nin : req.query.notinclude } });
+            const ids = [];
       
           availableRooms.forEach((room) => {
             if (room.checkIn <= endDate && room.checkOut >= startDate) {
@@ -65,6 +69,29 @@ export const roomController = {
           }
       
           res.status(200).send(rooms);
+          }
+          else{
+            availableRooms = await roomBookingModel.find();
+            const ids = [];
+      
+          availableRooms.forEach((room) => {
+            if (room.checkIn <= endDate && room.checkOut >= startDate) {
+              ids.push(room.room);
+            }
+          });
+      
+          let rooms = [];
+          if (ids.length > 0) {
+            console.log('here');
+            rooms = await roomsModel.find({ _id: { $nin: ids }  , status : true});
+          } else {
+            rooms = await roomsModel.find();
+          }
+          console.log(rooms)
+          res.status(200).send(rooms);
+          }
+          
+          
         } catch (error) {
           return res.status(500).send({ msg: error.message });
         }
@@ -84,6 +111,22 @@ export const roomController = {
         res.status(200).send("Room deleted success fully")
       } catch (error) {
         return res.status(500).send({msg : error.message})
+      }
+    }, 
+    updateRoomBooking : async (req, res) => {
+      try {
+        const booking = await roomBookingModel.updateOne({_id : req.params.id} , {...req.body})
+        res.status(200).send("Room Booking Updated successfully")
+      } catch (error) {
+        return res.status(500).send({ msg: error.message })
+      }
+    },
+    deleteRoomBooking : async (req, res) => {
+      try {
+        const booking = await roomBookingModel.deleteOne({_id : req.params.id})
+        res.status(200).send("Room Booking deleted successfully")
+      } catch (error) {
+        return res.status(500).send({ msg: error.message })
       }
     }
       

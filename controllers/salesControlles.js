@@ -202,6 +202,30 @@ export const salesController = {
         } catch (error) {
             return res.status(500).send({ msg: error.message })
         }
-    }
+    },
+    updateDrinkStock: async (req, res) => {
+        try {
+            console.log(req.body)
+            const stock = await drinkStockModel.findOne({ _id: req.params.id })
+            await drinksModel.updateOne({ _id: stock.drinkItem }, { $inc: { stock: -stock.stock } })
+            const drinkStock = await drinkStockModel.updateOne({ _id: req.params.id }, req.body)
+            await drinksModel.updateOne({ _id: stock.drinkItem }, { $inc: { stock: req.body.stock } })
+
+            res.status(200).send({ msg: "Drink Stock Updated" })
+        } catch (error) {
+            return res.status(500).send({ msg: error.message })
+        }
+    },
+    deleteDrinkStock: async (req, res) => {
+        try {
+            const stock = await drinkStockModel.findOne({ _id: req.params.id })
+            const drinkStock = await drinkStockModel.deleteOne({ _id: req.params.id })
+            await drinksModel.updateOne({ _id: stock.drinkItem }, { $inc: { stock: -stock.stock } })
+            res.status(200).send({ msg: "Drink Stock Deleted" })
+        } catch (error) {
+            return res.status(500).send({ msg: error.message })
+        }
+    },
+
 
 }

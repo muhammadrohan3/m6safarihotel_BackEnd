@@ -21,4 +21,6 @@ router.delete('/deleteDrinkSales/:id' , salesController.deleteDrinkSales)
 router.put('/updateDrinkSales/:id' , salesController.updateDrinkSales)
 router.post('/addDrinkStock' , salesController.addStock)
 router.get('/getDrinksStock' , salesController.getStock)
+router.put("/updateDrinkStock/:id" , salesController.updateDrinkStock)
+router.delete("/deleteDrinkStock/:id" , salesController.deleteDrinkStock)
 export default router
