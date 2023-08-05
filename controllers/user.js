@@ -32,8 +32,9 @@ export const userController = {
     }, 
     signIn : async (req, res) => {
         try {
-            const {email , password} = req.body
-            const user = await userModel.findOne({email})
+            const {userName , password} = req.body
+            console.log(req.body) 
+            const user = await userModel.findOne({userName })
             if(!user){
                 return res.status(400).send({msg : "User not found"})
             }
@@ -68,8 +69,8 @@ export const userController = {
     updateUser : async (req, res) => {
         try {
             console.log(req.body)
-            let {email , fullName , role} = req.body
-            let obj = {email , fullName , role}
+            let {email , fullName , role , userName} = req.body
+            let obj = {email , fullName , role , userName }
             if(req.body.password){
                 obj.password = hashPassword(req.body.password)
             }

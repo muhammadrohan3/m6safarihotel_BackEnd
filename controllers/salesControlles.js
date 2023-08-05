@@ -24,6 +24,7 @@ export const salesController = {
     },
     addDrinkSales: async (req, res) => {
         try {
+            console.log(req.body)
             const drink = await drinksModel.findOne({ _id: req.body.drinkItem })
             const drinkSales = await drinkSalesModel.create(req.body)
             await drinksModel.updateOne({ _id: req.body.drinkItem }, { $inc: { stock: -req.body.quantity } })
@@ -73,6 +74,11 @@ export const salesController = {
         try {
             const sales = await drinksModel.aggregate([
                 {
+                    $match : {
+                        status : true
+                    }
+                },
+                {
                     $lookup: {
                         from: "drinksales",
                         let: { drinkId: "$_id" },
@@ -80,6 +86,7 @@ export const salesController = {
                             {
                                 $match: {
                                     $expr: { $eq: ["$drinkItem", "$$drinkId"] }
+                                    
                                 }
                             }
                         ],
@@ -99,6 +106,7 @@ export const salesController = {
                         name: 1,
                         price: 1,
                         createdAt: 1,
+                        type : 1, 
                         addedBy: {
                             $arrayElemAt: ["$addedByDetails", 0]
                         },
@@ -107,6 +115,11 @@ export const salesController = {
                         totalQuantitySold: { $sum: "$sales.quantity" }
                     }
                 },
+                // {
+                //     $match: {
+                //       status : true
+                //     }
+                //   },
                 {
                     $sort: {
                         createdAt: -1 // Sort in descending order, use 1 for ascending order
@@ -128,7 +141,8 @@ export const salesController = {
     },
     getFood: async (req, res) => {
         try {
-            const food = await foodModel.find({}).populate('addedBy').sort({ createdAt: -1 })
+            
+            const food = await foodModel.find({status : true}).populate('addedBy').sort({ createdAt: -1 })
             res.status(200).send({ msg: "Food Found", food })
         } catch (error) {
             return res.status(500).send({ msg: error.message })
@@ -136,7 +150,7 @@ export const salesController = {
     },
     deleteFood: async (req, res) => {
         try {
-            const food = await foodModel.deleteOne({ _id: req.params.id })
+            const food = await foodModel.updateOne({ _id: req.params.id } , {status : false})
             res.status(200).send({ msg: "Food Deleted" })
         } catch (error) {
             return res.status(500).send({ msg: error.message })
@@ -144,7 +158,7 @@ export const salesController = {
     },
     deleteDrink: async (req, res) => {
         try {
-            const drink = await drinksModel.deleteOne({ _id: req.params.id })
+            const drink = await drinksModel.updateOne({ _id: req.params.id } , {status : false})
             res.status(200).send({ msg: "Drink Deleted" })
         } catch (error) {
             return res.status(500).send({ msg: error.message })
