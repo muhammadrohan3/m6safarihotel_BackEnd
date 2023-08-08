@@ -42,7 +42,7 @@ export const userController = {
             if(!isMatch){
                 return res.status(400).send({msg : "Invalid Credentials"})
             }
-            const token = jwt.sign({id : user._id , email : user.email} , process.env.JWT_SECRET , {expiresIn : '1d'})
+            const token = jwt.sign({id : user._id , email : user.email , userName : user.userName} , process.env.JWT_SECRET , {expiresIn : '1d'})
             res.status(200).send({msg : "Logged In" , token : token , user : user})
         } catch (error) {
             return res.status(500).send({ msg: error.message }) 
@@ -52,7 +52,7 @@ export const userController = {
         try {
             const data = jwt.decode(req.body.token)
             console.log(data)
-            userModel.findOne({_id : data.id})
+            userModel.findOne({_id : data.userName})
             .then(user => {
                 console.log(user)
                 return res.status(200).send({msg : "User Found" , user })
