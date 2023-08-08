@@ -52,7 +52,7 @@ export const userController = {
         try {
             const data = jwt.decode(req.body.token)
             console.log(data)
-            userModel.findOne({_id : data.userName})
+            userModel.findOne({userName : data.userName})
             .then(user => {
                 console.log(user)
                 return res.status(200).send({msg : "User Found" , user })
