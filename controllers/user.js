@@ -53,6 +53,9 @@ export const userController = {
             const data = jwt.decode(req.body.token)
             console.log(data)
             const user = await userModel.findOne({_id : data.id})
+            if(!user){
+                return res.status(400).send({msg : "User not found"})
+            }
             return res.status(200).send({msg : "User Found" , user })
         } catch (error) {
             return res.status(500).send({ msg: error.message })
