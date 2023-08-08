@@ -54,6 +54,7 @@ export const userController = {
             console.log(data)
             userModel.findOne({_id : data.id})
             .then(user => {
+                console.log(user)
                 return res.status(200).send({msg : "User Found" , user })
             })
             .catch(err => {
