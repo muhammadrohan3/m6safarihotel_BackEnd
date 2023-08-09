@@ -24,7 +24,6 @@ export const salesController = {
     },
     addDrinkSales: async (req, res) => {
         try {
-            console.log(req.body)
             const drink = await drinksModel.findOne({ _id: req.body.drinkItem })
             const drinkSales = await drinkSalesModel.create(req.body)
             await drinksModel.updateOne({ _id: req.body.drinkItem }, { $inc: { stock: -req.body.quantity } })
@@ -219,7 +218,6 @@ export const salesController = {
     },
     updateDrinkStock: async (req, res) => {
         try {
-            console.log(req.body)
             const stock = await drinkStockModel.findOne({ _id: req.params.id })
             await drinksModel.updateOne({ _id: stock.drinkItem }, { $inc: { stock: -stock.stock } })
             const drinkStock = await drinkStockModel.updateOne({ _id: req.params.id }, req.body)

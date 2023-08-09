@@ -44,13 +44,12 @@ export const roomController = {
     getAvailableRooms :  async (req, res) => {
         try {
           const { checkIn, checkOut } = req.body;
-          console.log(req.query)
 
           const startDate = new Date(checkIn);
           const endDate = new Date(checkOut);
           let availableRooms
           if(req.query.notinclude !== 'undefined'){
-            console.log("here in the condition")
+
             availableRooms = await roomBookingModel.find({ _id  : { $nin : req.query.notinclude } });
             const ids = [];
       
@@ -62,7 +61,7 @@ export const roomController = {
       
           let rooms = [];
           if (ids.length > 0) {
-            console.log('here');
+
             rooms = await roomsModel.find({ _id: { $nin: ids }  , status : true});
           } else {
             rooms = await roomsModel.find();
@@ -82,12 +81,12 @@ export const roomController = {
       
           let rooms = [];
           if (ids.length > 0) {
-            console.log('here');
+            
             rooms = await roomsModel.find({ _id: { $nin: ids }  , status : true});
           } else {
             rooms = await roomsModel.find();
           }
-          console.log(rooms)
+          
           res.status(200).send(rooms);
           }
           
@@ -98,7 +97,7 @@ export const roomController = {
     },
     updateRoom : async (req, res) =>{
         try {
-          console.log(req.params.id)
+          
           const room = await roomsModel.updateOne({_id : req.params.id} , {...req.body})
           res.status(200).send("Room Updated successfully")
         } catch (error) {
@@ -153,7 +152,7 @@ export const roomController = {
 //       end: weekEnd,
 //     };
 //   }
-//   console.log(getWeekDateRange(new Date()))
+//   
 
 /* 
 

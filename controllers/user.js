@@ -33,7 +33,7 @@ export const userController = {
     signIn : async (req, res) => {
         try {
             const {userName , password} = req.body
-            console.log(req.body) 
+            
             const user = await userModel.findOne({userName })
             if(!user){
                 return res.status(400).send({msg : "User not found"})
