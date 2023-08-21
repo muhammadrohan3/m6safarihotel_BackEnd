@@ -7,6 +7,7 @@ import salesRouter from "./routes/salesRouter.js"
 import roomsRouter from './routes/roomsRouter.js'
 import mongoose from 'mongoose'
 import reportRouter from './routes/reportRouter.js'
+import bankingRouter from './routes/bankingRouter.js'
 dotenv.config()
 const app = express()
 cors({ origin: true, credentials: true })
@@ -33,6 +34,7 @@ app.use('/api/expenses' , expenseRouter)
 app.use('/api/sales' , salesRouter)
 app.use('/api/rooms' , roomsRouter)
 app.use('/api/reports' , reportRouter)
+app.use('/api/banking' , bankingRouter)
 app.get("/", (req, res) => {
     res.send("Hello to Hotel Management API")
 })

@@ -88,11 +88,15 @@ const weeklyReport = async (startDate, endDate) => {
 }
 export const reportController = {
     getDailyReport: async (req, res) => {
-        const date = new Date()
+        const uganda_timezone = 'Africa/Kampala';
+        const dateSample = new Date().toLocaleString('en-US', { timeZone: uganda_timezone });
+        const date = new Date(dateSample);
+        console.log("This is date", date)
         const food = await foodSales.find({ createdAt: { $gte: date.setHours(0, 0, 0, 0), $lt: date.setHours(23, 59, 59, 999) } }).populate('foodItem')
         const drinks = await drinkSalesModel.find({ createdAt: { $gte: date.setHours(0, 0, 0, 0), $lt: date.setHours(23, 59, 59, 999) } }).populate('drinkItem')
         const rooms = await roomBookingModel.find({ createdAt: { $gte: date.setHours(0, 0, 0, 0), $lt: date.setHours(23, 59, 59, 999) } }).populate('room')
-        const expenses = await expenseModel.find({ createdAt: { $gte: date.setHours(0, 0, 0, 0), $lt: date.setHours(23, 59, 59, 999) } })
+        const expenses = await expenseModel.find({ date: { $gte: date.setHours(0, 0, 0, 0), $lt: date.setHours(23, 59, 59, 999) } })
+        console.log(expenses)
         let total = {
             foodTotal: 0,
             drinksTotal: 0,
