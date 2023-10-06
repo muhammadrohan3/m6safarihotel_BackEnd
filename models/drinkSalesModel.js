@@ -13,6 +13,10 @@ const drinkSalesSchema = mongoose.Schema({
     total: {
         type: Number,
         required: true
+    },
+    addedBy : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'User'
     }
 },{
     timestamps : true

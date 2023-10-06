@@ -3,7 +3,6 @@ import bankingModel from '../models/bankingModel.js';
 export const bankingController = {
     addBanking: async (req, res) => {
         try {
-            console.log(req.body)
             const banking = await bankingModel.create({ ...req.body })
             res.status(200).send({ msg: "Banking Added" })
         } catch (error) {

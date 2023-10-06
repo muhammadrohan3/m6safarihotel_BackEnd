@@ -23,10 +23,7 @@ export const roomController = {
     }, 
     addRoomBooking : async (req, res) => {
         try {
-          console.log(req.body)
-          
           let obj = {...req.body}
-          console.log(obj)
              const roomBooking = await roomBookingModel.create(obj)
              return res.status(200).send({msg : "Room Booked"})
         } catch (error) {
@@ -35,7 +32,7 @@ export const roomController = {
     }, 
     getRoomBookings : async (req, res) => {
         try {
-            const bookings = await roomBookingModel.find({}).populate('room').sort({ createdAt: -1 })
+            const bookings = await roomBookingModel.find({}).populate('room').populate('addedBy').sort({ createdAt: -1 })
             return res.status(200).send({msg : "Room Bookings Found" , bookings})
         } catch (error) {
             return res.status(500).send({ msg: error.message })
