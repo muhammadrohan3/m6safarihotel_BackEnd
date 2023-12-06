@@ -3,7 +3,7 @@ import foodModel from "../models/foodModel.js";
 import foodSalesModel from "../models/foodSales.js";
 import drinkSalesModel from "../models/drinkSalesModel.js";
 import drinkStockModel from "../models/drinkStockModel.js";
-
+import otherSalesModel from "../models/otherSales.js";
 export const salesController = {
   addFoodSales: async (req, res) => {
     try {
@@ -293,6 +293,38 @@ export const salesController = {
         { $inc: { stock: -stock.stock } }
       );
       res.status(200).send({ msg: "Drink Stock Deleted" });
+    } catch (error) {
+      return res.status(500).send({ msg: error.message });
+    }
+  },
+  addOtherSales : async (req, res) => {
+    try {
+      const sales = await otherSalesModel.create(req.body)
+      res.status(200).send({msg : "Sales Added"})
+    } catch (error) {
+      return res.status(500).send({ msg: error.message });
+    }
+  },
+  getOtherSales : async (req, res) => {
+    try {
+      const sales = await otherSalesModel.find({}).populate('addedBy').sort({createdAt : -1})
+      res.status(200).send({msg : "Sales Found", sales})
+    } catch (error) {
+      return res.status(500).send({ msg: error.message });
+    }
+  },
+  deleteOtherSales : async (req, res) => {
+    try {
+      const sales = await otherSalesModel.deleteOne({_id : req.params.id})
+      res.status(200).send({msg : "Sales Deleted"})
+    } catch (error) {
+      return res.status(500).send({ msg: error.message });
+    }
+  },
+  updateOtherSales : async (req, res) => {
+    try {
+      const sales = await otherSalesModel.updateOne({_id : req.params.id}, req.body)
+      res.status(200).send({msg : "Sales Updated"})
     } catch (error) {
       return res.status(500).send({ msg: error.message });
     }
